@@ -89,6 +89,10 @@ RUN groupadd -g 5000 vmail \
   syslog-ng-core \
   syslog-ng-mod-redis \
   wget \
+  && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+  && chmod +x /usr/local/bin/gosu \
+  && gosu nobody true \
   && rm /usr/lib/python*/EXTERNALLY-MANAGED \
   && apt-get -y --no-install-recommends install \
   dovecot-auth-lua \
