@@ -19,6 +19,7 @@ RUN groupadd -g 5000 vmail \
   && useradd -c "Dovecot unprivileged user" -d /dev/null -u 401 -g dovecot -s /bin/false dovecot \
   && useradd -c "Dovecot login user" -d /dev/null -u 402 -g dovenull -s /bin/false dovenull \
   && touch /etc/default/locale \
+  && rm usr/lib/python*/EXTERNALLY-MANAGED \
   && apt-get update \
   && apt-get -y --no-install-recommends install \
   build-essential \
