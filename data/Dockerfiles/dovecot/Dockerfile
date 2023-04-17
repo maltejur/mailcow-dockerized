@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:sid-slim
 LABEL maintainer "Andre Peters <andre.peters@servercow.de>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -89,15 +89,8 @@ RUN groupadd -g 5000 vmail \
   syslog-ng-core \
   syslog-ng-mod-redis \
   wget \
-  && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-  && chmod +x /usr/local/bin/gosu \
-  && gosu nobody true \
-  && apt-key adv --fetch-keys https://repo.dovecot.org/DOVECOT-REPO-GPG \
-  && echo "deb https://repo.dovecot.org/ce-${DOVECOT}/debian/bullseye bullseye main" > /etc/apt/sources.list.d/dovecot.list \
-  && apt-get update \
   && apt-get -y --no-install-recommends install \
-  dovecot-lua \
+  dovecot-auth-lua \
   dovecot-managesieved \
   dovecot-sieve \
   dovecot-lmtpd \
@@ -110,7 +103,6 @@ RUN groupadd -g 5000 vmail \
   && pip3 install mysql-connector-python html2text jinja2 redis \
   && apt-get autoremove --purge -y \
   && apt-get autoclean \
-  && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/* /var/tmp/* /root/.cache/
 # imapsync dependencies
 RUN cpan Crypt::OpenSSL::PKCS12

@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:sid-slim
 LABEL maintainer "Andre Peters <andre.peters@servercow.de>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -8,8 +8,7 @@ ARG GOSU_VERSION=1.16
 ENV LC_ALL C
 
 # Prerequisites
-RUN echo "Building from repository $SOGO_DEBIAN_REPOSITORY" \
-  && apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   apt-transport-https \
   ca-certificates \
   gettext \
@@ -21,23 +20,14 @@ RUN echo "Building from repository $SOGO_DEBIAN_REPOSITORY" \
   syslog-ng-core \
   syslog-ng-mod-redis \
   dirmngr \
-  netcat \
+  netcat-openbsd \
   psmisc \
   wget \
   patch \
-  && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-  && chmod +x /usr/local/bin/gosu \
-  && gosu nobody true \
-  && mkdir /usr/share/doc/sogo \
-  && touch /usr/share/doc/sogo/empty.sh \
-  && apt-key adv --keyserver keys.openpgp.org --recv-key 74FFC6D72B925A34B5D356BDF8A27B36A6E2EAE9 \
-  && echo "deb ${SOGO_DEBIAN_REPOSITORY} bullseye bullseye" > /etc/apt/sources.list.d/sogo.list \
-  && apt-get update && apt-get install -y --no-install-recommends \
+  && apt-get install -y --no-install-recommends \
     sogo \
     sogo-activesync \
   && apt-get autoclean \
-  && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/sogo.list \
   && touch /etc/default/locale
 
 COPY ./bootstrap-sogo.sh /bootstrap-sogo.sh
