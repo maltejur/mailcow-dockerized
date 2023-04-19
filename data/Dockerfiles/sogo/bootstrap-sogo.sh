@@ -248,8 +248,4 @@ rsync -a /usr/lib/GNUstep/SOGo/. /sogo_web/
 # Chown backup path
 chown -R sogo:sogo /sogo_backup
 
-# Create sogo.pid
-touch /var/run/sogo/sogo.pid
-chown sogo /var/run/sogo/sogo.pid
-
 exec gosu sogo /usr/sbin/sogod
