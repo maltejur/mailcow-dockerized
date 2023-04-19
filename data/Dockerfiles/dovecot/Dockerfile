@@ -89,6 +89,11 @@ RUN groupadd -g 5000 vmail \
   syslog-ng-core \
   syslog-ng-mod-redis \
   wget \
+  && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
+  && chmod +x /usr/local/bin/gosu \
+  && gosu nobody true \
+  && rm /usr/lib/python*/EXTERNALLY-MANAGED \
   && apt-get -y --no-install-recommends install \
   dovecot-auth-lua \
   dovecot-managesieved \
@@ -105,7 +110,7 @@ RUN groupadd -g 5000 vmail \
   && apt-get autoclean \
   && rm -rf /tmp/* /var/tmp/* /root/.cache/
 # imapsync dependencies
-RUN cpan Crypt::OpenSSL::PKCS12
+RUN cpan -T Crypt::OpenSSL::PKCS12
 
 COPY trim_logs.sh /usr/local/bin/trim_logs.sh
 COPY clean_q_aged.sh /usr/local/bin/clean_q_aged.sh
