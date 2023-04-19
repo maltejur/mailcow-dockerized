@@ -45,7 +45,7 @@ COPY docker-entrypoint.sh /
 RUN chmod +x /bootstrap-sogo.sh \
   /usr/local/sbin/stop-supervisor.sh
 
-RUN touch /var/run/sogo/sogo.pid && chown sogo /var/run/sogo/sogo.pid
+RUN mkdir -p /var/run/sogo && touch /var/run/sogo/sogo.pid && chown sogo /var/run/sogo/sogo.pid
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
